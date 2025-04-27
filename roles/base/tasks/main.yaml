@@ -1,7 +1,7 @@
 - name: Upgrade apt cache and uprade packages
   apt: 
     update_cache: true
-    uprade: dist
+    upgrade: dist
 
 
 - name: Install base packages
