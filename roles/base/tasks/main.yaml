@@ -20,4 +20,16 @@
     rule: allow
     port: 22
     proto: tcp
-    
+  
+- name: Install Nginx 
+  apt: 
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Nginx reverse proxy
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify:
+    - restart nginx
