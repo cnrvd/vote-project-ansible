@@ -1,0 +1,35 @@
+---
+
+- name: Autostart prep
+  systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+    daemon_reload: true
+  loop: "{critical_services}}"
+  register: service_config
+  when: ansible_facts.services[item + '.service'] is defined
+  ignore_errors: true
+  tags: autostart
+
+- name: Autostart config
+  blockinfile:
+    path: /etc/systemd/system/{{ item }}.service
+    create: true
+    mode: '0644'
+    block: |
+      [Service]
+      Restart=always
+      RestartSec=5
+      StartLimitInterval=0
+  loop: "{{ critical_services }}"
+  when: ansible_facts.services[item + '.service'] is not defined
+  ignore_errors: true
+  tags: autostart
+  
+- name: Config daemon_reload
+  systemd:
+    daemon_reload: true
+  when: service_config is changed
+  tags: autostart
+
