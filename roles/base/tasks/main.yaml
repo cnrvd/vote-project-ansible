@@ -29,7 +29,7 @@
 
 - name: Nginx reverse proxy
   template:
-    src: nginx.conf.j2
-    dest: /etc/nginx/sites-available/default
+    src: voteapp.nginx.conf.j2
+    dest: /etc/nginx/sites-available/voteapp
   notify:
     - restart nginx
