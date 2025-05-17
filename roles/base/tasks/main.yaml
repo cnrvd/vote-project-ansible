@@ -1,3 +1,7 @@
+- name: Test sudo
+  command: whoami
+  become: yes
+
 - name: Upgrade apt cache and uprade packages
   apt: 
     update_cache: true
