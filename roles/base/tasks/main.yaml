@@ -33,3 +33,10 @@
     dest: /etc/nginx/sites-available/voteapp
   notify:
     - restart nginx
+
+- name: restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+  when: ansible_facts.services['nginx.service'] is defined
+  ignore_errors: true
