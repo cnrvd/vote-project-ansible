@@ -6,4 +6,12 @@
   roles: 
     - base
 
+- name: Setup Home Lab Vote App
+  hosts: Lab1
+  become: true
+  vars_files:
+    - secret.yml
+  roles: 
+    - voteapp
+
  
