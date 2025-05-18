@@ -5,14 +5,15 @@
     state: started
     daemon_reload: true
   loop: "{{critical_services}}"
-  register: service_config
+  when: critical_services is defined and critical_services | length > 0
+  when: item is defined and item + '.service' in ansible_facts.services
   when: ansible_facts.services[item + '.service'] is defined
   ignore_errors: true
   tags: autostart
 
 - name: Autostart config
   blockinfile:
-    path: /etc/systemd/system/{{ item }}.service
+    path: /etc/systemd/system/{{ safe_item }}.service
     create: true
     mode: '0644'
     block: |
@@ -21,7 +22,9 @@
       RestartSec=5
       StartLimitInterval=0
   loop: "{{ critical_services }}"
-  when: ansible_facts.services[item + '.service'] is not defined
+  vars:
+    safe_item: "{{ item | regex_replace('[^a-zA-Z0-9_.-]', '_') }}"
+  when: item is defined and ansible_facts.services[item + '.service'] is not defined
   ignore_errors: true
   tags: autostart
   
@@ -30,4 +33,3 @@
     daemon_reload: true
   when: service_config.changed
   tags: autostart
-
