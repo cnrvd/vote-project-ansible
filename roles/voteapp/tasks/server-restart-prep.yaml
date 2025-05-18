@@ -5,9 +5,9 @@
     state: started
     daemon_reload: true
   loop: "{{critical_services}}"
-  when: critical_services is defined and critical_services | length > 0
-  when: item is defined and item + '.service' in ansible_facts.services
-  when: ansible_facts.services[item + '.service'] is defined
+  when: critical_services is defined and critical_services | length > 0 and
+        item is defined and item + '.service' in ansible_facts.services and
+        ansible_facts.services[item + '.service'] is defined
   ignore_errors: true
   tags: autostart
 
