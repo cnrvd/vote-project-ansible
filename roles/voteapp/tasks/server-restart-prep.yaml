@@ -1,12 +1,10 @@
----
-
 - name: Autostart prep
   systemd:
     name: "{{ item }}"
     enabled: true
     state: started
     daemon_reload: true
-  loop: "{critical_services}}"
+  loop: "{{critical_services}}"
   register: service_config
   when: ansible_facts.services[item + '.service'] is defined
   ignore_errors: true
@@ -30,6 +28,6 @@
 - name: Config daemon_reload
   systemd:
     daemon_reload: true
-  when: service_config is changed
+  when: service_config.changed
   tags: autostart
 
