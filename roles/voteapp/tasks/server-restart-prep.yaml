@@ -11,7 +11,7 @@
     state: started
     daemon_reload: true
   loop: "{{ critical_services }}"
-  when: 
+  when:
     - critical_services is defined
     - critical_services | length > 0
     - item is defined
@@ -33,7 +33,7 @@
   loop: "{{ critical_services }}"
   vars:
     safe_item: "{{ item | regex_replace('[^a-zA-Z0-9_.-]', '_') }}"
-  when: 
+  when:
     - critical_services is defined
     - critical_services | length > 0
     - item is defined
@@ -41,9 +41,10 @@
   ignore_errors: true
   register: service_config
   tags: autostart
-  
+
 - name: Config daemon_reload
   systemd:
     daemon_reload: true
   when: service_config is changed
   tags: autostart
+  
