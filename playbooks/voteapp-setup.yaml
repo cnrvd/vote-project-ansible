@@ -1,3 +1,4 @@
+---
 - name: Configure critical services autostart
   hosts: all
   become: yes
