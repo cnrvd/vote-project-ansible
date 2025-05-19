@@ -1,7 +1,9 @@
-- name: Setup Home Lab Vote App
+- name: Configure critical services autostart
   hosts: all
-  become: true
+  become: yes
   vars_files:
-    - secret.yml
-  roles: 
+    - voteapp/vars/voteapp.yaml
+  roles:
     - voteapp
+  tasks: server-restart-prep.yaml
+  tags: autostart

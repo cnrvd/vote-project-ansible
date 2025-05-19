@@ -1,13 +1,22 @@
+---
+
+- name: Gather service facts
+  service_facts:
+  tags: autostart
+
 - name: Autostart prep
   systemd:
     name: "{{ item }}"
     enabled: true
     state: started
     daemon_reload: true
-  loop: "{{critical_services}}"
-  when: critical_services is defined and critical_services | length > 0 and
-        item is defined and item + '.service' in ansible_facts.services and
-        ansible_facts.services[item + '.service'] is defined
+  loop: "{{ critical_services }}"
+  when: 
+    - critical_services is defined
+    - critical_services | length > 0
+    - item is defined
+    - (item + '.service') in ansible_facts.services
+    - ansible_facts.services[item + '.service'] is defined
   ignore_errors: true
   tags: autostart
 
@@ -24,12 +33,17 @@
   loop: "{{ critical_services }}"
   vars:
     safe_item: "{{ item | regex_replace('[^a-zA-Z0-9_.-]', '_') }}"
-  when: item is defined and ansible_facts.services[item + '.service'] is not defined
+  when: 
+    - critical_services is defined
+    - critical_services | length > 0
+    - item is defined
+    - (item + '.service') not in ansible_facts.services
   ignore_errors: true
+  register: service_config
   tags: autostart
   
 - name: Config daemon_reload
   systemd:
     daemon_reload: true
-  when: service_config.changed
+  when: service_config is changed
   tags: autostart
