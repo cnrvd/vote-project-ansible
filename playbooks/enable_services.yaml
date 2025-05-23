@@ -1,0 +1,9 @@
+---
+
+- name: Enable services on boot
+  hosts: all                  
+  become: true                
+  vars_files:
+    - ../roles/enable_services/vars/main.yml   
+  roles:
+    - enable_services
