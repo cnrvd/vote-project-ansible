@@ -1,0 +1,16 @@
+---
+- name: Enable automatic start for critical services
+  hosts: all
+  become: true
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Ensure critical services are enabled to start on boot
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop: "{{ critical_services }}"
+      when: item is defined
+      ignore_errors: yes  

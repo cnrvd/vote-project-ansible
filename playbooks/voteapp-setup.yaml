@@ -1,11 +1,2 @@
 ---
-- name: Configure critical services autostart
-  hosts: all
-  become: true
-  vars_files:
-    - voteapp/vars/voteapp.yaml
-  roles:
-    - voteapp
-  tasks: server-restart-prep.yaml
-  tags: autostart
-  
+- name: 
